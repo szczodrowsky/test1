@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Stroopa</title>
+	<style>
+		.stimulus {
+			font-size: 2rem;
+			margin: 2rem;
+			text-align: center;
+		}
+		.choices {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			margin: 2rem;
+			padding: 0;
+			list-style: none;
+		}
+		.choice {
+			margin: 0 0.5rem;
+			padding: 1rem;
+			background-color: #ccc;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 1.5rem;
+			text-align: center;
+		}
+		.choice:hover {
+			background-color: #aaa;
+		}
+		.choice:active {
+			background-color: #888;
+		}
+	</style>
+</head>
+<body>
+	<h1>Test Stroopa</h1>
+
+	{% for stimulus in stimuli %}
+	<div class="stimulus" style="color: {{ stimulus.split('-')[0] }};">
+		{{ stimulus.split('-')[1] }}
+	</div>
+
+	<form method="POST" action="/test">
+		<ul class="choices">
+			{% for color in colors %}
+			{% if color == stimulus.split('-')[0] %}
+			<li>
+				<button class="choice" type="submit" name="response" value="true">{{ color }}</button>
+			</li>
+			{% endif %}
+			{% endfor %}
+			{% for color in colors %}
+			{% if color != stimulus.split('-')[0] %}
+			<li>
+				<button class="choice" type="submit" name="response" value="false">{{ color }}</button>
+			</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+
+		<input type="hidden" name="time" value="{{ loop.index }}">
+		<input type="hidden" name="score" value="{{ score }}">
+		<input type="hidden" name="total" value="{{ loop.length }}">
+
+	</form>
+
+	{% endfor %}
+
+	{% if is_last %}
+		<h2>Twój wynik to {{ score }} na {{ loop.length }}</h2>
+	{% endif %}
+
+</body>
+</html>
